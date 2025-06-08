@@ -5,7 +5,7 @@
 To run locally clone repo to your local</br>
 Run `npm i` to install packages </br>
 Run `php bin/console doctrine:database:create` to create SQLite database locally (git ignored) </br>
-Run migration (if error due to sqlite, try to run `php bin/console doctrine:database:create`</br>
+Run migrations</br>
 Run `php bin/console tailwind:build --watch` and in another terminal run `symfony server:start`</br>
 </br>
 
