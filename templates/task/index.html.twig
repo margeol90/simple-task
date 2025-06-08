@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Task List{% endblock %}
+
+{% block body %}
+<style>
+
+</style>
+
+<div class="max-w-md mx-auto mt-8">
+    <div class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+        {% for label, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                {% set classes = {
+                    'success': 'bg-green-100 text-green-800',
+                    'error': 'bg-red-100 text-red-800',  
+                }
+                %}
+                <div class="flash-message mb-4 p-4 rounded {{ classes[label] }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <h2 class="text-sky-900 text-3xl font-bold mb-4 text-center">Simple Task Tracker</h2>
+    <form method="POST" action="/tasks" class="mb-4 flex">
+        <input name="title" class="border p-2 flex-grow rounded-l focus:outline-sky-900" placeholder="New task..." required>
+    <button class="bg-sky-900 text-white px-4 py-2 rounded-r">Add</button>
+    </form>
+    <ul class="bg-white shadow-md rounded p-4">
+        {% for task in tasks %}
+        <li class="flex items-center mb-2 bg-sky-50 p-4 rounded hover:bg-sky-100 transition-colors duration-200">
+            <span class="{{ task.isDone ? 'line-through text-gray-500' : ''}} flex-shrink-0 overflow-hidden whitespace-nowrap text-ellipsis w-[75%] inline-block">{{ task.title|capitalize }}</span>
+            <form 
+                method="POST" 
+                action="/tasks/{{task.id}}/toggle" 
+                class="inline ml-4 w-[40px] shrink-0"
+            >
+                <button 
+                    class="text-green-500 w-full {{ task.isDone ? 'opacity-50 cursor-auto' : '' }}" 
+                    title="Mark this task as complete or incomplete"
+                    {% if task.isDone %}disabled{% endif %}
+                >✔</button>
+            </form>
+            <form method="POST" action="/tasks/{{task.id}}/delete" class="inline ml-2 w-[40px] shrink-0">
+                <button class="text-red-500 w-full" title="Delete this task, and remove it from the list">🗑</button>
+            </form>
+        </li>
+        {% else %}
+            <li class="text-gray-500 h-40 m-auto text-center flex items-center justify-center">No tasks found. Start adding!</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    document.querySelectorAll('.flash-message').forEach(function(el) {
+        setTimeout(function() {
+            el.style.transition = 'opacity 0.5s';
+            el.style.opacity = '0';
+            setTimeout(function() { el.style.display = 'none'; }, 500);     
+        }, 1500);
+    });
+</script>
+
+
+{% endblock %}
